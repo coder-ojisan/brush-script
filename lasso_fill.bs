@@ -1,0 +1,43 @@
+-- Lasso Fill by coder-ojisan
+
+firstDraw = true
+pos = {}
+r, g, b = 0, 0, 0
+o = bs_opaque() * 255
+
+function param1()
+  name = "Use the color of the first point"
+  if bs_lang() == "ja" then
+    name = "最初の点の色を使う"
+  end
+  return name, 0, 1, 1
+end
+
+function main(x, y, p)
+  if firstDraw then
+    if bs_param1() == 1 then
+      r, g, b = bs_pixel_get(x, y)
+    else
+      r, g, b = bs_fore()
+    end
+  end
+  firstDraw = false
+  table.insert(pos, {x=x, y=y});
+  bs_ellipse(x, y, 1, 1, 0, r, g, b, o)
+
+  lastX = x
+  lastY = y
+  return 
+end
+
+function last(x, y, p)
+  bs_reset()
+  for k, v in ipairs(pos) do
+    bs_polygon(v.x, v.y)
+  end
+  bs_fill(r, g, b, o)
+end
+
+function default_size()
+  return 1, 1
+end
